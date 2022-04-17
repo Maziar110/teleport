@@ -1,0 +1,6 @@
+Tip: Each line should contain a name(alias) and a directory which already exists otherwise you will face an error
+Tip: in each line just put your alias and the address only with 1 space: 
+
+
+alias /home/john/myDirectory/mysubdirectory/mystuffIdontwanttosee/anothersubdirectory/finalymydirectory/alias/
+videos /home/myvideos/camera/1990/videos/

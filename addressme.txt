@@ -1,0 +1,2 @@
+talon /home/maziyar/Documents/work/talonCode/
+teleport /home/maziyar/Documents/work/lab/teleport
