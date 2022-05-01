@@ -54,11 +54,11 @@ jobs:
 
       - name: Packing into zip for Darwin-arm64
         if: ${{matrix.os  == 'arm64'}}
-        run: zip -r "-${{matrix.os}}-${{github.event.release.tag_name}}.zip" "teleport-mac"
+        run: zip -r "teleport-${{matrix.os}}-${{github.event.release.tag_name}}.zip" "teleport-mac"
 
       - name: Packing into zip for Darwin-amd64
         if: ${{matrix.os == 'amd64'}} 
-        run: zip -r "-${{matrix.os}}-${{github.event.release.tag_name}}.zip" "teleport-mac-amd"
+        run: zip -r "teleport-${{matrix.os}}-${{github.event.release.tag_name}}.zip" "teleport-mac-amd"
 
       - name: show where we are
         run: echo $(pwd)
