@@ -36,9 +36,18 @@ func handle_request(arg []string, path string) {
 	} else {
 		switch arg[0] {
 		case `bulk`:
-			fmt.Println("Will be added soon, update this file: ", file_path)
+			fmt.Println("Beta Version, Not tested")
+			bulk_commands := bulk_alias_from_file(file_path)
+			update_bashrc(bulk_commands)
+
+		case `cat`:
+			cat()
+		case `help`:
+			help()
 		default:
-			command := alias_creator(arg[0], path)
+			var command []string
+
+			command = append(command, alias_creator(arg[0], path))
 			update_bashrc(command)
 		}
 	}
@@ -51,9 +60,9 @@ func alias_creator(alias string, path string) string {
 }
 
 // Reads a file and gets the alias from it and returns a Map of "alias": "location"
-func bulk_alias_from_file(path string) map[string]string {
+func bulk_alias_from_file(path string) []string {
 
-	address_book := make(map[string]string)
+	var address_book []string
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -68,7 +77,7 @@ func bulk_alias_from_file(path string) map[string]string {
 		if len(line) > 2 {
 			fmt.Printf("There are more spaces in line %s which we picked %s as alias and %s as address", line_string, line[0], line[1])
 		}
-		address_book[line[0]] = line[1]
+		address_book = append(address_book, alias_creator(line[0], line[1]))
 	}
 	if err := lines.Err(); err != nil {
 		fmt.Println("An error while reading address lines: ", err)
@@ -86,7 +95,7 @@ func alias_exists(addresses map[string]string, key string) (bool, string) {
 
 }
 
-func update_bashrc(command string) bool {
+func update_bashrc(commands []string) bool {
 	dir, is_directory := where_to_save()
 	if is_directory {
 		if file, err := os.OpenFile(dir, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644); err != nil {
@@ -94,14 +103,17 @@ func update_bashrc(command string) bool {
 			return false
 		} else {
 			defer file.Close()
+			for i := 0; i < len(commands); i += 1 {
+				_, err := file.WriteString(commands[i] + "\n")
+				if err != nil {
+					fmt.Println(err)
+					return false
+				}
 
-			if _, err := file.WriteString(command + "\n"); err != nil {
-				fmt.Println(err)
-				return false
-			} else {
-				source_bashrc(dir)
-				return true
 			}
+			source_bashrc(dir)
+			return true
+
 		}
 
 	} else {
@@ -136,4 +148,23 @@ func where_to_save() (string, bool) {
 
 func source_bashrc(path string) {
 	fmt.Printf("to apply the change, run: `source %s`  \n", path)
+}
+
+func cat() {
+	path, _ := where_to_save()
+	file, err := os.Open(path)
+	if err != nil {
+		fmt.Printf("An error while opening %s file", path)
+	}
+	defer file.Close()
+	lines := bufio.NewScanner(file)
+	for lines.Scan() {
+		fmt.Println(lines.Text())
+	}
+
+}
+
+func help() {
+	help := "Supported arguments: \n cat (prints aliases) \n <text> (adds text as an alias for your current location) \n bulk (Beta - adds are locations added in a file with the name of addressme.txt"
+	fmt.Println(help)
 }

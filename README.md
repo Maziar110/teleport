@@ -21,3 +21,12 @@ fi
 
 3. Head to each directory you intend to and run `sv alias` which `sv` is the name of teleport built app you previously made a shortcut of and alias is the name you want to assign to that direction.
 4. From now on you can jump to the directory easily by write your alias name.
+
+
+## Arguments
+With arguments you can use differentfeatures of teleport. currently `Teleport` supports below arguments:
+
+- **cat** - prints current aliases. like: `teleport cat`
+
+- **(empty)** - if you leave the argument empty, it prints your current location. like `teleport `
+- **(location name)** - when you head to a location that you want to save, you simply use teleport and location alias as argument. like: `teleport mycode`
